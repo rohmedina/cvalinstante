@@ -1,0 +1,304 @@
+:root {
+  /* ===== TAMAÑOS DE FUENTE ===== */
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+
+  /* ===== COLORES BASE ===== */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+
+  /* ===== COLORES GRISES ===== */
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+
+  /* ===== COLORES PRIMARIOS (TEAL) ===== */
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+  --color-teal-800: rgba(41, 150, 161, 1);
+
+  /* ===== COLORES DE ESTADO ===== */
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1); /* Error */
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1); /* Warning */
+  --color-brown-600: rgba(94, 82, 64, 1);
+
+  /* ===== COLORES MODO OSCURO ===== */
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+
+  /* ===== COLORES CV ESPECÍFICOS ===== */
+  --cv-name-color: #2c5aa0; /* Azul profesional */
+  --cv-text-color: #333333; /* Negro */
+  --cv-contact-color: #666666; /* Gris */
+  --cv-section-title-color: #666666; /* Gris */
+  --cv-date-color: #666666; /* Gris */
+  --cv-skills-color: #333333; /* Negro */
+  --cv-skills-bg: #f5f5f5; /* Gris claro */
+  --cv-checkmark-color: white;
+
+  /* ===== COLORES SEMÁNTICOS ===== */
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --bg-primary: var(--color-cream-50);
+  --bg-surface: var(--color-cream-100);
+  --text-primary: var(--color-slate-900);
+  --text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --text-button-primary: var(--color-cream-50);
+
+  /* ===== FONDOS DECORATIVOS ===== */
+  --bg-blue-light: rgba(59, 130, 246, 0.08);
+  --bg-yellow-light: rgba(245, 158, 11, 0.08);
+  --bg-green-light: rgba(34, 197, 94, 0.08);
+  --bg-red-light: rgba(239, 68, 68, 0.08);
+  --bg-purple-light: rgba(147, 51, 234, 0.08);
+  --bg-orange-light: rgba(249, 115, 22, 0.08);
+  --bg-pink-light: rgba(236, 72, 153, 0.08);
+  --bg-cyan-light: rgba(6, 182, 212, 0.08);
+
+  /* ===== TAMAÑOS ESPECÍFICOS DEL CV ===== */
+  --cv-name-size: var(--font-size-3xl); /* 24px */
+  --cv-text-size: var(--font-size-sm); /* 12px */
+  --cv-contact-size: var(--font-size-xs); /* 11px */
+  --cv-section-title-size: var(--font-size-lg); /* 16px */
+  --cv-date-size: var(--font-size-xs); /* 11px */
+  --cv-skills-size: var(--font-size-xs); /* 11px */
+  --cv-checkmark-size: 8px;
+  --modal-title-size: var(--font-size-3xl); /* 24px */
+  --error-text-size: var(--font-size-sm); /* 12px */
+}
+
+/* ===== MODO OSCURO ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --bg-primary: var(--color-charcoal-700);
+    --bg-surface: var(--color-charcoal-800);
+    --text-primary: var(--color-gray-200);
+    --text-secondary: var(--color-gray-300);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-500);
+    --text-button-primary: var(--color-charcoal-800);
+  }
+}
+
+/* ===== CLASE PARA MODO OSCURO MANUAL ===== */
+.dark {
+  --color-background: var(--color-charcoal-700);
+  --color-surface: var(--color-charcoal-800);
+  --bg-primary: var(--color-charcoal-700);
+  --bg-surface: var(--color-charcoal-800);
+  --text-primary: var(--color-gray-200);
+  --text-secondary: var(--color-gray-300);
+  --color-primary: var(--color-teal-300);
+  --color-primary-hover: var(--color-teal-400);
+  --color-primary-active: var(--color-teal-500);
+  --text-button-primary: var(--color-charcoal-800);
+}
+
+/* ===== CLASES UTILITARIAS ===== */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-cv-name { color: var(--cv-name-color); }
+.text-cv-text { color: var(--cv-text-color); }
+.text-cv-contact { color: var(--cv-contact-color); }
+.text-cv-section { color: var(--cv-section-title-color); }
+.text-cv-date { color: var(--cv-date-color); }
+.text-cv-skills { color: var(--cv-skills-color); }
+
+.bg-primary { background-color: var(--bg-primary); }
+.bg-surface { background-color: var(--bg-surface); }
+.bg-cv-skills { background-color: var(--cv-skills-bg); }
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--text-button-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-primary:active {
+  background-color: var(--color-primary-active);
+}
+
+/* ===== ESTILOS PARA IMPRESIÓN Y EXPORTACIÓN PDF ===== */
+@media print {
+  /* Configuración de página */
+  @page {
+    margin: 0.5in;
+    size: A4;
+  }
+
+  /* Resetear colores para impresión */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Asegurar que los colores se mantengan */
+  :root {
+    --cv-name-color: #2c5aa0 !important;
+    --cv-text-color: #333333 !important;
+    --cv-contact-color: #666666 !important;
+    --cv-section-title-color: #666666 !important;
+    --cv-date-color: #666666 !important;
+    --cv-skills-color: #333333 !important;
+    --cv-skills-bg: #f5f5f5 !important;
+  }
+
+  /* Optimizar tipografía para impresión */
+  body {
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    color: #333333 !important;
+  }
+
+  /* Mejorar contraste de texto */
+  .text-cv-name {
+    color: #2c5aa0 !important;
+    font-weight: bold !important;
+  }
+
+  .text-cv-text {
+    color: #333333 !important;
+  }
+
+  .text-cv-contact {
+    color: #666666 !important;
+  }
+
+  .text-cv-section {
+    color: #666666 !important;
+    font-weight: bold !important;
+  }
+
+  .text-cv-date {
+    color: #666666 !important;
+  }
+
+  /* Mejorar bordes y separadores */
+  .border-b {
+    border-bottom: 1px solid #cccccc !important;
+  }
+
+  .border-gray-200 {
+    border-color: #cccccc !important;
+  }
+
+  /* Optimizar espaciado para impresión */
+  .mb-8 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .mb-6 {
+    margin-bottom: 1rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .mb-2 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .mb-1 {
+    margin-bottom: 0.25rem !important;
+  }
+
+  .mt-2 {
+    margin-top: 0.5rem !important;
+  }
+
+  /* Evitar saltos de página innecesarios */
+  .mb-6 {
+    page-break-inside: avoid;
+  }
+
+  /* Corregir el formato de las viñetas */
+  .flex.items-start {
+    display: block !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .flex.items-start::before {
+    content: "• " !important;
+    color: #333333 !important;
+    font-weight: bold !important;
+    margin-right: 0.5rem !important;
+  }
+
+  /* Mejorar el espaciado de las viñetas */
+  .mr-2 {
+    display: none !important;
+  }
+
+  /* Asegurar que el texto se ajuste correctamente */
+  .leading-relaxed {
+    line-height: 1.4 !important;
+    display: inline !important;
+  }
+
+  /* Ocultar elementos que no son necesarios en impresión */
+  .no-print {
+    display: none !important;
+  }
+
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\:rounded-none {
+    border-radius: 0 !important;
+  }
+
+  /* Mejorar el formato del contenedor principal */
+  .cv-container {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Ajustar el padding del contenido principal */
+  .bg-white.shadow-lg.rounded-lg.p-8 {
+    padding: 1rem !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}
