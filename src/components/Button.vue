@@ -6,7 +6,7 @@
     :disabled="disabled"
   >
     <div class="button-content">
-      <span v-if="icon" class="icon" :class="{ 'mr-2': text }">
+      <span v-if="icon" class="icon" :class="{ 'icon-with-text': text }">
         {{ icon }}
       </span>
       <span v-if="text" class="button-text">
@@ -102,23 +102,41 @@ const buttonStyles = computed(() => {
 <style scoped>
 /* Estilos base */
 .btn-base {
-  @apply font-medium rounded-lg transition-all duration-200 cursor-pointer;
-  @apply flex items-center justify-center;
-  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  font-family: var(--font-family-base);
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
   border: none;
+}
+
+.btn-base:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 /* Tamaños */
 .btn-small {
-  @apply px-3 py-1.5 text-sm;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .btn-medium {
-  @apply px-4 py-2 text-base;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .btn-large {
-  @apply px-6 py-3 text-lg;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 /* Variantes */
@@ -132,7 +150,7 @@ const buttonStyles = computed(() => {
 }
 
 .btn-primary:focus {
-  ring-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .btn-secondary {
@@ -141,31 +159,34 @@ const buttonStyles = computed(() => {
 }
 
 .btn-secondary:hover:not(.btn-disabled) {
-  @apply opacity-80;
+  opacity: 0.8;
 }
 
 .btn-secondary:focus {
-  ring-color: var(--color-gray-400);
+  box-shadow: 0 0 0 2px var(--color-gray-400);
 }
 
 .btn-sidebar {
-  @apply w-full text-left justify-start;
+  width: 100%;
+  text-align: left;
+  justify-content: flex-start;
   background-color: transparent;
   color: var(--text-secondary);
   padding: 12px 16px;
   border-radius: 8px;
   transition: all 0.2s ease;
   border: 1px solid var(--color-slate-500);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-
-
 .btn-sidebar:focus {
-  ring-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .btn-action {
-  @apply w-full;
+  width: 100%;
   background-color: var(--color-primary);
   color: var(--text-button-primary);
   padding: 12px 16px;
@@ -177,7 +198,7 @@ const buttonStyles = computed(() => {
 }
 
 .btn-action:focus {
-  ring-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .btn-danger {
@@ -190,43 +211,45 @@ const buttonStyles = computed(() => {
 }
 
 .btn-danger:focus {
-  ring-color: var(--color-red-600);
+  box-shadow: 0 0 0 2px var(--color-red-600);
 }
 
 /* Estados */
 .btn-disabled {
-  @apply opacity-50 cursor-not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-full-width {
-  @apply w-full;
+  width: 100%;
 }
 
 /* Icono */
 .icon {
-  @apply flex-shrink-0;
+  flex-shrink: 0;
+}
+
+.icon-with-text {
+  margin-right: 0.5rem;
 }
 
 /* Layout del botón */
 .button-content {
-  @apply flex items-center;
+  display: flex;
+  align-items: center;
 }
 
 .button-text {
-  @apply flex-1;
+  flex: 1;
 }
 
 .button-slot {
-  @apply ml-auto;
+  margin-left: auto;
 }
 
 /* Layout específico para sidebar */
 .btn-sidebar .button-content {
-  @apply flex-1;
-}
-
-.btn-sidebar {
-  @apply flex items-center justify-between;
+  flex: 1;
 }
 
 /* Hover effects para sidebar */

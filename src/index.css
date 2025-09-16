@@ -1,3 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Aplicar tipografía Inter globalmente y box-sizing */
+* {
+  font-family: var(--font-family-base);
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+html {
+  font-family: var(--font-family-base);
+}

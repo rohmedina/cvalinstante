@@ -1,15 +1,15 @@
 <template>
-  <div class="min-h-screen flex flex-col lg:flex-row" style="background-color: var(--color-background);">
+  <div class="app-container" style="background-color: var(--color-background);">
     <!-- Panel izquierdo para edición -->
-    <div class="w-full lg:w-96 flex flex-col lg:h-screen lg:sticky lg:top-0" style="background-color: var(--color-surface); color: var(--text-primary);">
+    <div class="sidebar-panel" style="background-color: var(--color-surface); color: var(--text-primary);">
       <!-- Header -->
-      <div class="p-6 text-center border-b flex-shrink-0" style="border-color: var(--color-gray-400);">
-        <h1 class="font-bold" style="font-size: var(--modal-title-size); color: var(--color-primary);">CvAlInstante</h1>
-        <p class="mt-1" style="font-size: var(--font-size-sm); color: var(--text-secondary);">Completa cada sección para crear tu currículum profesional</p>
+      <div class="sidebar-header" style="border-color: var(--color-gray-400);">
+        <h1 class="app-title" style="font-size: var(--modal-title-size); color: var(--color-primary);">CvAlInstante</h1>
+        <p class="app-subtitle" style="font-size: var(--font-size-sm); color: var(--text-secondary);">Completa cada sección para crear tu currículum profesional</p>
       </div>
       
       <!-- Botones de navegación -->
-      <div class="flex-1 p-4 space-y-2 lg:overflow-y-auto">
+      <div class="sidebar-content">
         <Button variant="sidebar" @click="openPersonal()" icon="👤" text="Información Personal" :completed="hasPersonalInfo">
           <div class="status-indicator" :class="{ 'filled': hasPersonalInfo }">
             <svg v-if="hasPersonalInfo" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -62,15 +62,15 @@
       </div>
       
       <!-- Botones de acción -->
-      <div class="p-4 border-t space-y-2 flex-shrink-0" style="border-color: var(--color-gray-400);">
+      <div class="sidebar-footer" style="border-color: var(--color-gray-400);">
         <Button variant="action" @click="exportPdf" icon="📄" text="Exportar a PDF" />
         <Button variant="secondary" @click="clearCV" icon="🗑️" text="Limpiar CV" full-width />
         
         <!-- Botón de donaciones -->
-        <div class="mt-4 pt-4 border-t" style="border-color: var(--color-gray-400);">
-          <div class="text-center">
-            <p class="text-xs mb-2" style="color: var(--text-secondary);">¿Te gusta esta herramienta?</p>
-            <div class="flex justify-center">
+        <div class="donation-section" style="border-color: var(--color-gray-400);">
+          <div class="donation-content">
+            <p class="donation-text" style="color: var(--text-secondary);">¿Te gusta esta herramienta?</p>
+            <div class="donation-button-container">
               <a href="https://www.buymeacoffee.com/R0Medina" target="_blank">
                 <img 
                   src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" 
@@ -85,7 +85,7 @@
     </div>
 
     <!-- Panel derecho para vista previa -->
-    <div class="flex-1 p-4 lg:p-8 min-h-screen">
+    <div class="preview-panel">
       <CvPreview />
     </div>
 
@@ -189,7 +189,6 @@ const saveModalData = (data) => {
       workExperience: 'Experiencia Laboral',
       education: 'Educación',
       skills: 'Habilidades Técnicas',
-      languages: 'Idiomas',
       certifications: 'Certificaciones',
       additionalInfo: 'Información Adicional'
     }
@@ -316,32 +315,141 @@ const updateTheme = () => {
 </script>
 
 <style scoped>
-/* Estilos para indicadores de estado en botones del sidebar */
+/* Layout principal */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    flex-direction: row;
+  }
+}
+
+/* Panel lateral */
+.sidebar-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .sidebar-panel {
+    width: 24rem; /* 384px - equivalente a w-96 */
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+}
+
+/* Header del sidebar */
+.sidebar-header {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid;
+  flex-shrink: 0;
+}
+
+.app-title {
+  font-weight: bold;
+}
+
+.app-subtitle {
+  margin-top: 0.25rem;
+}
+
+/* Contenido del sidebar */
+.sidebar-content {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .sidebar-content {
+    overflow-y: auto;
+  }
+}
+
+/* Footer del sidebar */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Sección de donaciones */
+.donation-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid;
+}
+
+.donation-content {
+  text-align: center;
+}
+
+.donation-text {
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.donation-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Panel de vista previa */
+.preview-panel {
+  flex: 1;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+@media (min-width: 1024px) {
+  .preview-panel {
+    padding: 2rem;
+  }
+}
+
+/* Indicadores de estado */
 .status-indicator {
-  @apply w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200;
-  border-color: var(--color-gray-400);
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
 }
 
 .status-indicator.filled {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: #10b981;
+  border-color: #10b981;
 }
 
 .check-icon {
-  @apply w-3 h-3 text-white;
+  width: 0.75rem;
+  height: 0.75rem;
+  color: white;
 }
 
-/* Estilos para el botón de Buy Me a Coffee */
+/* Botón de Buy Me a Coffee */
 .buy-me-coffee-btn {
-  height: 40px !important;
-  width: auto !important;
-  border-radius: 8px !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  height: 2rem;
+  transition: transform 0.2s ease-in-out;
 }
 
 .buy-me-coffee-btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transform: scale(1.05);
 }
 </style>
 

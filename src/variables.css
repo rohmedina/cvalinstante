@@ -1,4 +1,8 @@
 :root {
+  /* ===== TIPOGRAFÍA ===== */
+  --font-family-base: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, 
+                      Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+
   /* ===== TAMAÑOS DE FUENTE ===== */
   --font-size-xs: 11px;
   --font-size-sm: 12px;
@@ -186,7 +190,7 @@
     color: #333333 !important;
   }
 
-  /* Mejorar contraste de texto */
+  /* Mejorar contraste de texto - Clases que sí existen */
   .text-cv-name {
     color: #2c5aa0 !important;
     font-weight: bold !important;
@@ -209,67 +213,14 @@
     color: #666666 !important;
   }
 
-  /* Mejorar bordes y separadores */
-  .border-b {
-    border-bottom: 1px solid #cccccc !important;
-  }
-
-  .border-gray-200 {
-    border-color: #cccccc !important;
-  }
-
-  /* Optimizar espaciado para impresión */
-  .mb-8 {
-    margin-bottom: 1.5rem !important;
-  }
-
-  .mb-6 {
-    margin-bottom: 1rem !important;
-  }
-
-  .mb-4 {
-    margin-bottom: 0.75rem !important;
-  }
-
-  .mb-2 {
-    margin-bottom: 0.5rem !important;
-  }
-
-  .mb-1 {
-    margin-bottom: 0.25rem !important;
-  }
-
-  .mt-2 {
-    margin-top: 0.5rem !important;
-  }
-
-  /* Evitar saltos de página innecesarios */
-  .mb-6 {
-    page-break-inside: avoid;
-  }
-
-  /* Corregir el formato de las viñetas */
-  .flex.items-start {
-    display: block !important;
-    margin-bottom: 0.25rem !important;
-  }
-
-  .flex.items-start::before {
-    content: "• " !important;
-    color: #333333 !important;
-    font-weight: bold !important;
-    margin-right: 0.5rem !important;
-  }
-
-  /* Mejorar el espaciado de las viñetas */
-  .mr-2 {
-    display: none !important;
-  }
-
-  /* Asegurar que el texto se ajuste correctamente */
-  .leading-relaxed {
-    line-height: 1.4 !important;
-    display: inline !important;
+  /* Mejorar el formato del contenedor principal del CV */
+  .cv-container {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 1rem !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
   }
 
   /* Ocultar elementos que no son necesarios en impresión */
@@ -277,28 +228,74 @@
     display: none !important;
   }
 
-  .print\:shadow-none {
-    box-shadow: none !important;
+  /* Optimizar secciones para impresión */
+  .section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 1rem !important;
   }
 
-  .print\:rounded-none {
-    border-radius: 0 !important;
+  /* Mejorar formato de elementos de trabajo - mantener como bloque completo */
+  .job-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: auto;
+    break-after: auto;
+    margin-bottom: 1rem !important;
+    /* Forzar que el elemento se mantenga junto */
+    display: block !important;
+    overflow: visible !important;
   }
 
-  /* Mejorar el formato del contenedor principal */
-  .cv-container {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-    max-width: none !important;
+  /* Mejorar formato de elementos de educación */
+  .education-item {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 0.75rem !important;
   }
 
-  /* Ajustar el padding del contenido principal */
-  .bg-white.shadow-lg.rounded-lg.p-8 {
-    padding: 1rem !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+  /* Evitar que las descripciones de trabajo se dividan */
+  .job-description {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    /* Mantener todas las líneas de descripción juntas */
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Mantener juntos el header y descripción del trabajo */
+  .job-header {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    /* Asegurar que el header no se separe de la descripción */
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Evitar que las líneas de descripción se separen del trabajo */
+  .job-line {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    /* Mantener las líneas de descripción juntas */
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Asegurar que el texto del trabajo se mantenga junto */
+  .job-text {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Evitar que los títulos de trabajo se separen */
+  .job-title {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Mantener fechas con su contenido */
+  .job-date {
+    page-break-before: avoid;
+    break-before: avoid;
   }
 }

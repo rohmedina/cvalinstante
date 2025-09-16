@@ -4,7 +4,7 @@ Una aplicación web moderna y elegante para crear currículums vitae profesional
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.5.18-4FC08D?style=flat-square&logo=vue.js&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7.1.2-646CFF?style=flat-square&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-Custom-1572B6?style=flat-square&logo=css3&logoColor=white)
 ![Pinia](https://img.shields.io/badge/Pinia-3.0.3-FFD859?style=flat-square&logo=pinia&logoColor=black)
 
 ## ✨ Características
@@ -23,7 +23,6 @@ Una aplicación web moderna y elegante para crear currículums vitae profesional
 - ✅ Experiencia Laboral
 - ✅ Educación
 - ✅ Habilidades Técnicas
-- ✅ Idiomas
 - ✅ Certificaciones
 - ✅ Información Adicional
 
@@ -79,7 +78,7 @@ npm run preview      # Vista previa de la build de producción
 ```
 Frontend Framework    → Vue.js 3 (Composition API)
 Build Tool           → Vite
-Estilos             → Tailwind CSS + CSS Variables
+Estilos             → CSS3 Personalizado + CSS Variables
 Estado              → Pinia Store
 Persistencia        → LocalStorage
 ```
@@ -123,7 +122,7 @@ src/
 | **Vue.js** | 3.5.18 | Framework principal |
 | **Vite** | 7.1.2 | Build tool y dev server |
 | **Pinia** | 3.0.3 | Gestión de estado |
-| **Tailwind CSS** | 3.4.17 | Framework de estilos |
+| **CSS3** | Personalizado | Estilos y diseño responsive |
 | **jsPDF** | 2.5.1 | Generación de PDFs |
 
 ## 📱 Características Responsive
@@ -175,7 +174,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 - Inspirado en formatos profesionales de CV
 - Construido con las mejores prácticas de Vue.js 3
-- Diseño responsive con Tailwind CSS
+- Diseño responsive con CSS3 personalizado y variables CSS
 
 ---
 
