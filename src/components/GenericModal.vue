@@ -12,25 +12,37 @@
               <span v-if="field.required" style="font-size: var(--error-text-size); color: var(--color-red-400);">*</span>
             </label>
             
-            <!-- Input de texto -->
+            <!-- Input de texto y campos específicos -->
             <input 
-              v-if="(field.type === 'text' || field.type === 'email' || field.type === 'tel') && draft"
+              v-if="['text', 'email', 'tel', 'name', 'position', 'company', 'url', 'degree', 'institution', 'category', 'certification', 'date'].includes(field.type) && draft"
               v-model="draft[field.key]"
-              :type="field.type"
+              :type="getInputType(field.type)"
               :placeholder="field.placeholder"
               :required="field.required"
               class="input"
+              :class="{ 'error': showErrors && errors[field.key] }"
+              @input="handleFieldValidation(field, draft[field.key])"
+              @blur="handleFieldBlur(field, draft[field.key])"
             />
+            <div v-if="showErrors && errors[field.key] && ['text', 'email', 'tel', 'name', 'position', 'company', 'url', 'degree', 'institution', 'category', 'certification', 'date'].includes(field.type)" class="error-message">
+              {{ errors[field.key] }}
+            </div>
             
-            <!-- Textarea -->
+            <!-- Textarea y campos de descripción/resumen -->
             <textarea 
-              v-else-if="field.type === 'textarea' && draft"
+              v-else-if="['textarea', 'description', 'summary'].includes(field.type) && draft"
               v-model="draft[field.key]"
               :rows="field.rows || 3"
               :placeholder="field.placeholder"
               :required="field.required"
               class="input"
+              :class="{ 'error': showErrors && errors[field.key] }"
+              @input="handleFieldValidation(field, draft[field.key])"
+              @blur="handleFieldBlur(field, draft[field.key])"
             ></textarea>
+            <div v-if="showErrors && errors[field.key] && ['textarea', 'description', 'summary'].includes(field.type)" class="error-message">
+              {{ errors[field.key] }}
+            </div>
           </div>
         </div>
         
@@ -65,7 +77,13 @@
                           :type="field.type"
                           :placeholder="field.placeholder"
                           class="input-small"
+                          :class="{ 'error': showErrors && errors[field.key] }"
+                          @input="handleFieldValidation(field, item[field.key])"
+                          @blur="handleFieldBlur(field, item[field.key])"
                         />
+                        <div v-if="showErrors && errors[field.key]" class="error-message">
+                          {{ errors[field.key] }}
+                        </div>
                       </div>
                       <div v-if="getNextPositionCompanyField(field, config.fields)">
                         <label class="field-label" style="font-size: var(--font-size-sm); color: var(--text-secondary);">
@@ -76,7 +94,13 @@
                           :type="getNextPositionCompanyField(field, config.fields).type"
                           :placeholder="getNextPositionCompanyField(field, config.fields).placeholder"
                           class="input-small"
+                          :class="{ 'error': showErrors && errors[getNextPositionCompanyField(field, config.fields).key] }"
+                          @input="handleFieldValidation(getNextPositionCompanyField(field, config.fields), item[getNextPositionCompanyField(field, config.fields).key])"
+                          @blur="handleFieldBlur(getNextPositionCompanyField(field, config.fields), item[getNextPositionCompanyField(field, config.fields).key])"
                         />
+                        <div v-if="showErrors && errors[getNextPositionCompanyField(field, config.fields).key]" class="error-message">
+                          {{ errors[getNextPositionCompanyField(field, config.fields).key] }}
+                        </div>
                       </div>
                     </div>
                     
@@ -91,7 +115,13 @@
                           :type="field.type"
                           :placeholder="field.placeholder"
                           class="input-small"
+                          :class="{ 'error': showErrors && errors[field.key] }"
+                          @input="handleFieldValidation(field, item[field.key])"
+                          @blur="handleFieldBlur(field, item[field.key])"
                         />
+                        <div v-if="showErrors && errors[field.key]" class="error-message">
+                          {{ errors[field.key] }}
+                        </div>
                       </div>
                       <div v-if="getNextDateField(field, config.fields)">
                         <label class="field-label" style="font-size: var(--font-size-sm); color: var(--text-secondary);">
@@ -102,33 +132,66 @@
                           :type="getNextDateField(field, config.fields).type"
                           :placeholder="getNextDateField(field, config.fields).placeholder"
                           class="input-small"
+                          :class="{ 'error': showErrors && errors[getNextDateField(field, config.fields).key] }"
+                          @input="handleFieldValidation(getNextDateField(field, config.fields), item[getNextDateField(field, config.fields).key])"
+                          @blur="handleFieldBlur(getNextDateField(field, config.fields), item[getNextDateField(field, config.fields).key])"
                         />
+                        <div v-if="showErrors && errors[getNextDateField(field, config.fields).key]" class="error-message">
+                          {{ errors[getNextDateField(field, config.fields).key] }}
+                        </div>
                       </div>
                     </div>
                     
-                    <!-- Campos normales (no fecha, cargo o empresa, o sin consecutivo) -->
+                    <!-- Campos normales (incluye fechas individuales, no fecha, cargo o empresa, o sin consecutivo) -->
                     <template v-else-if="!isSkippedDateField(field, config.fields) && !isSkippedPositionCompanyField(field, config.fields)">
                       <label class="field-label" style="font-size: var(--font-size-sm); color: var(--text-secondary);">
                         {{ field.label }}
                       </label>
                        
-                      <!-- Input de texto -->
+                      <!-- Input de texto y campos específicos -->
                       <input 
-                        v-if="field.type === 'text' || field.type === 'date'"
+                        v-if="['text', 'date', 'name', 'position', 'company', 'url', 'degree', 'institution', 'category', 'certification'].includes(field.type)"
                         v-model="item[field.key]"
-                        :type="field.type"
+                        :type="getInputType(field.type)"
                         :placeholder="field.placeholder"
+                        :disabled="field.key === 'endDate' && item.isCurrentJob"
                         class="input-small"
+                        :class="{ 'input-disabled': field.key === 'endDate' && item.isCurrentJob, 'error': showErrors && errors[field.key] }"
+                        @input="handleFieldValidation(field, item[field.key])"
+                        @blur="handleFieldBlur(field, item[field.key])"
                       />
+                      <div v-if="showErrors && errors[field.key] && ['text', 'date', 'name', 'position', 'company', 'url', 'degree', 'institution', 'category', 'certification'].includes(field.type)" class="error-message">
+                        {{ errors[field.key] }}
+                      </div>
+                      
+                      <!-- Checkbox -->
+                      <div v-else-if="field.type === 'checkbox'" class="checkbox-container">
+                        <input 
+                          v-model="item[field.key]"
+                          type="checkbox"
+                          :id="`${field.key}-${i}`"
+                          class="checkbox-input"
+                          @change="handleCurrentJobChange(item, field.key)"
+                        />
+                        <label :for="`${field.key}-${i}`" class="checkbox-label">
+                          {{ field.label }}
+                        </label>
+                      </div>
                        
-                      <!-- Textarea -->
+                      <!-- Textarea y campos de descripción/resumen -->
                       <textarea 
-                        v-else-if="field.type === 'textarea'"
+                        v-else-if="['textarea', 'description', 'summary'].includes(field.type)"
                         v-model="item[field.key]"
                         :rows="field.rows || 2"
                         :placeholder="field.placeholder"
                         class="input-small"
+                        :class="{ 'error': showErrors && errors[field.key] }"
+                        @input="handleFieldValidation(field, item[field.key])"
+                        @blur="handleFieldBlur(field, item[field.key])"
                       ></textarea>
+                      <div v-if="showErrors && errors[field.key] && ['textarea', 'description', 'summary'].includes(field.type)" class="error-message">
+                        {{ errors[field.key] }}
+                      </div>
                     </template>
                   </template>
                 </div>
@@ -189,7 +252,13 @@
           <button type="button" @click="emit('close')" class="btn btn-cancel" style="font-size: var(--font-size-base);">
             Cancelar
           </button>
-          <button type="submit" class="btn btn-primary" style="font-size: var(--font-size-base);">
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            style="font-size: var(--font-size-base);"
+            :disabled="!areRequiredFieldsComplete || isValidating"
+            :class="{ 'btn-disabled': !areRequiredFieldsComplete || isValidating }"
+          >
             Guardar
           </button>
         </div>
@@ -199,7 +268,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
+import { useValidation } from '../composables/useValidation'
 
 const props = defineProps({
   config: {
@@ -214,6 +284,22 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'save'])
 
+// Inicializar composable de validación
+const { 
+  errors, 
+  isValidating, 
+  validateField, 
+  validateFields, 
+  clearErrors,
+  clearFieldError,
+  hasErrors 
+} = useValidation()
+
+// Estado para controlar cuándo mostrar errores
+const showErrors = ref(false)
+
+const fieldTouched = reactive({})
+
 const draft = ref(props.config?.type === 'list' ? [] : {})
 const tagInput = ref('')
 
@@ -224,6 +310,30 @@ const modalSize = computed(() => {
     case 'xl': return 'max-w-lg sm:max-w-xl'
     default: return 'max-w-sm sm:max-w-md'
   }
+})
+
+// Computed property para verificar si todos los campos requeridos están completos
+const areRequiredFieldsComplete = computed(() => {
+  if (!props.config?.fields) return true
+  
+  if (props.config.type === 'simple') {
+    return props.config.fields.every(field => {
+      if (!field.required) return true
+      const value = draft.value[field.key]
+      return value && value.toString().trim() !== ''
+    })
+  } else if (props.config.type === 'list') {
+    if (!draft.value || draft.value.length === 0) return false
+    return draft.value.every(item => {
+      return props.config.fields.every(field => {
+        if (!field.required) return true
+        const value = item[field.key]
+        return value && value.toString().trim() !== ''
+      })
+    })
+  }
+  
+  return true
 })
 
 onMounted(() => {
@@ -238,6 +348,15 @@ function initializeDraft() {
       props.config.fields.forEach(field => {
         if (field && field.key && !(field.key in draft.value)) {
           draft.value[field.key] = ''
+        }
+      })
+    }
+    
+    // Validar campos iniciales para limpiar errores si los datos son válidos
+    if (props.initialData && props.config.fields) {
+      props.config.fields.forEach(field => {
+        if (field && field.key && draft.value[field.key]) {
+          validateField(field.type, draft.value[field.key], field.key, field.validationRules)
         }
       })
     }
@@ -271,7 +390,12 @@ function addItem() {
   if (props.config.fields && Array.isArray(props.config.fields)) {
     props.config.fields.forEach(field => {
       if (field && field.key) {
-        newItem[field.key] = ''
+        // Inicializar checkbox como false por defecto
+        if (field.type === 'checkbox') {
+          newItem[field.key] = false
+        } else {
+          newItem[field.key] = ''
+        }
       }
     })
   }
@@ -304,6 +428,20 @@ function removeTag(index) {
 }
 
 function guardar() {
+  // Limpiar errores previos
+  clearErrors()
+  
+  // Validar todos los campos antes de guardar (solo para formularios con campos)
+  if (props.config.fields && props.config.fields.length > 0) {
+    const isFormValid = validateFields(props.config.fields, draft.value)
+    
+    if (!isFormValid || hasErrors()) {
+      showErrors.value = true
+      // Si hay errores, no proceder con el guardado
+      return
+    }
+  }
+  
   let dataToSave = draft.value
   
   // Para el tipo tags, procesar el texto del textarea si hay contenido sin procesar
@@ -318,7 +456,7 @@ function guardar() {
 
 // Funciones helper para manejar campos de fecha
 function isDateField(field) {
-  return field.key === 'startDate' || field.key === 'endDate' || field.key === 'graduationDate'
+  return field.key === 'startDate' || field.key === 'endDate' || field.key === 'graduationDate' || field.key === 'issueDate'
 }
 
 function hasConsecutiveDateField(field, fields) {
@@ -374,6 +512,51 @@ function isSkippedPositionCompanyField(field, fields) {
   const prevField = fields[currentIndex - 1]
   
   return prevField && isPositionCompanyField(prevField)
+}
+
+// Función para manejar el cambio del checkbox de trabajo actual
+function handleCurrentJobChange(item, fieldKey) {
+  if (fieldKey === 'isCurrentJob' && item[fieldKey]) {
+    item.endDate = 'Presente'
+  } else if (fieldKey === 'isCurrentJob' && !item[fieldKey]) {
+    item.endDate = ''
+  }
+}
+
+// Función para obtener el tipo de input correcto
+function getInputType(fieldType) {
+  // Mapear tipos específicos a tipos de input HTML
+  const typeMap = {
+    'name': 'text',
+    'position': 'text',
+    'company': 'text',
+    'url': 'url',
+    'degree': 'text',
+    'institution': 'text',
+    'category': 'text',
+    'certification': 'text',
+    'description': 'text',
+    'summary': 'text',
+    'date': 'text',
+    'text': 'text',
+    'email': 'email',
+    'tel': 'tel'
+  }
+  
+  return typeMap[fieldType] || 'text'
+}
+
+// Función para validar cuando el usuario escribe
+function handleFieldValidation(field, value) {
+  validateField(field.type, value, field.key, field.validationRules)
+}
+
+// Función para marcar campo como "tocado" cuando pierde el foco
+function handleFieldBlur(field, value) {
+  fieldTouched[field.key] = true
+  validateField(field.type, value, field.key, field.validationRules)
+  // Mostrar errores después de que el usuario haya interactuado con el campo
+  showErrors.value = true
 }
 </script>
 
@@ -471,6 +654,7 @@ function isSkippedPositionCompanyField(field, fields) {
   max-height: 24rem;
   overflow-y: auto;
   margin-bottom: 1rem;
+  padding-right: 0.5rem;
   flex: 1;
   min-height: 0;
 }
@@ -528,6 +712,7 @@ function isSkippedPositionCompanyField(field, fields) {
   margin-bottom: 0.75rem;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Inline fields */
@@ -622,6 +807,7 @@ function isSkippedPositionCompanyField(field, fields) {
 .input-small {
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
   border-radius: 0.25rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-gray-400);
@@ -705,5 +891,78 @@ function isSkippedPositionCompanyField(field, fields) {
 
 .btn-secondary:focus {
   box-shadow: 0 0 0 2px var(--color-gray-400);
+}
+
+/* Checkbox styles */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.checkbox-input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.checkbox-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label:hover {
+  color: var(--color-primary);
+}
+
+/* Estilos para campos deshabilitados */
+.input-disabled {
+  background-color: var(--color-gray-100);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input-disabled::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+/* Estilos para validación de errores */
+.input-small.error,
+.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444;
+}
+
+.input-small.error:focus,
+.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Estilos para botones deshabilitados */
+.btn-disabled {
+  background-color: var(--color-gray-300) !important;
+  color: var(--text-secondary) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+.btn-disabled:hover {
+  background-color: var(--color-gray-300) !important;
+  opacity: 0.6 !important;
 }
 </style>

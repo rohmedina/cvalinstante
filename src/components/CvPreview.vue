@@ -81,7 +81,7 @@
             <p class="education-institution" style="font-size: var(--cv-text-size);">{{ edu.institution }}</p>
           </div>
           <span class="education-year" style="font-size: var(--cv-date-size);">
-            {{ edu.year }}
+            {{ edu.graduationDate }}
           </span>
         </div>
         <p v-if="edu.description" class="education-description" style="font-size: var(--cv-text-size);">{{ edu.description }}</p>
@@ -131,8 +131,9 @@
               <h3 class="certification-name" style="font-size: var(--cv-text-size);">{{ cert.name }}</h3>
               <p class="certification-issuer" style="font-size: var(--cv-text-size);">{{ cert.issuer }}</p>
             </div>
-            <span class="certification-date" style="font-size: var(--cv-date-size);">{{ cert.date }}</span>
+            <div class="certification-date" style="font-size: var(--cv-date-size);">{{ cert.issueDate }}</div>
           </div>
+          <span v-if="cert.url" class="certification-url" style="font-size: var(--cv-text-size);"><a :href="cert.url" target="_blank">{{ cert.url }}</a></span>
         </div>
       </div>
     </div>
@@ -175,7 +176,6 @@ const professionalSummary = computed(() => cvStore.cvData.professionalSummary);
 const workExperience = computed(() => cvStore.cvData.workExperience);
 const education = computed(() => cvStore.cvData.education);
 const technicalSkills = computed(() => cvStore.cvData.technicalSkills);
-const languages = computed(() => cvStore.cvData.languages);
 const certifications = computed(() => cvStore.cvData.certifications);
 const additionalInfo = computed(() => cvStore.cvData.additionalInfo);
 
@@ -330,16 +330,17 @@ function exportPdf() {
       doc.text(contactLine, pageWidth / 2, currentY, { align: "center" });
     }
     
-    currentY += 10;
+    currentY += 5; // Reducido de 10 a 5
   }
   
-  currentY += 5;
+  // Reducido el espaciado adicional de 5 a 2
+  currentY += 2;
 
   // Línea divisoria con estilo similar al CSS
   doc.setDrawColor(209, 213, 219); // Color gris claro similar al CSS
   doc.setLineWidth(0.3);
   doc.line(marginLeft, currentY, pageWidth - marginLeft, currentY);
-  currentY += 10;
+  currentY += 6; // Reducido de 10 a 6
 
   // Secciones del CV usando addSection helper - solo si tienen contenido
   if (professionalSummary.value && professionalSummary.value.trim()) {
@@ -453,6 +454,60 @@ function addJobExperience(
   return currentY;
 }
 
+function addCertification(
+  doc,
+  cert,
+  currentY,
+  marginLeft,
+  pageWidth,
+  lineHeight
+) {
+  // Calcular el espacio total necesario para la certificación
+  const urlLines = cert.url ? doc.splitTextToSize(cert.url, pageWidth - marginLeft * 2) : [];
+  const totalCertHeight = 5 + 4 + (urlLines.length * lineHeight) + 6; // nombre + emisor + url + espaciado
+  
+  // Si el bloque completo no cabe en la página actual, mover a la siguiente
+  if (currentY + totalCertHeight > 260) {
+    doc.addPage();
+    currentY = 25;
+  }
+  
+  // Nombre de la certificación con fecha alineada a la derecha
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(60, 60, 60);
+  doc.text(cert.name, marginLeft, currentY);
+  
+  // Fecha alineada a la derecha
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(107, 114, 128);
+  const dateWidth = doc.getTextWidth(cert.issueDate);
+  doc.text(cert.issueDate, pageWidth - marginLeft - dateWidth, currentY);
+  currentY += 5;
+  
+  // Emisor de la certificación
+  doc.setFontSize(9.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(75, 85, 99);
+  doc.text(cert.issuer, marginLeft, currentY);
+  currentY += 4;
+  
+  // URL si existe
+  if (cert.url) {
+    doc.setFontSize(8);
+    doc.setTextColor(59, 130, 246); // Color azul para enlaces
+    urlLines.forEach((line) => {
+      doc.text(line, marginLeft, currentY);
+      currentY += lineHeight;
+    });
+  }
+  
+  // Espaciado entre certificaciones
+  currentY += 6;
+  return currentY;
+}
+
   // Educación con formato mejorado
   if (education.value?.length) {
     currentY = addSection(
@@ -486,7 +541,7 @@ function addEducationItem(
   lineHeight
 ) {
   // Calcular el espacio total necesario para todo el bloque de educación
-  const totalEducationHeight = 5 + 6 + 4; // título + institución/año + espaciado
+  const totalEducationHeight = 5 + 4 + 6; // título + institución + espaciado
   
   // Si el bloque completo no cabe en la página actual, mover a la siguiente
   if (currentY + totalEducationHeight > 260) {
@@ -494,22 +549,29 @@ function addEducationItem(
     currentY = 25;
   }
   
-  // Título de la educación con estilo similar al CSS
+  // Título de la educación con fecha alineada a la derecha
   doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(60, 60, 60);
   doc.text(edu.degree, marginLeft, currentY);
-  currentY += 5;
   
-  // Institución y fechas con estilo similar al CSS
+  // Fecha alineada a la derecha
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(107, 114, 128);
-  doc.text(`${edu.institution} | ${edu.year}`, marginLeft, currentY);
-  currentY += 6;
+  const dateWidth = doc.getTextWidth(edu.graduationDate);
+  doc.text(edu.graduationDate, pageWidth - marginLeft - dateWidth, currentY);
+  currentY += 5;
+  
+  // Institución
+  doc.setFontSize(9.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(75, 85, 99);
+  doc.text(edu.institution, marginLeft, currentY);
+  currentY += 4;
   
   // Espaciado entre elementos de educación
-  currentY += 4;
+  currentY += 6;
   return currentY;
 }
 
@@ -548,18 +610,26 @@ function addEducationItem(
 
   // Certificaciones - solo si hay contenido
   if (certifications.value?.length) {
-    const formatCerts = certifications.value
-      .map((c) => `${c.name} - ${c.issuer} (${c.date})`)
-      .join("\n");
     currentY = addSection(
       doc,
       "CERTIFICACIONES",
-      doc.splitTextToSize(formatCerts, pageWidth - marginLeft * 2),
+      [],
       currentY,
       marginLeft,
       pageWidth,
       lineHeight
     );
+    
+    certifications.value.forEach((cert) => {
+      currentY = addCertification(
+        doc,
+        cert,
+        currentY,
+        marginLeft,
+        pageWidth,
+        lineHeight
+      );
+    });
   }
 
   // Información adicional - solo si hay contenido
@@ -681,6 +751,7 @@ function addEducationItem(
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 0.25rem;
+  width: 100%;
 }
 
 .job-info {
@@ -690,13 +761,14 @@ function addEducationItem(
 .job-title {
   font-weight: bold;
   color: var(--cv-text-color);
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .job-date {
-  text-align: right;
   color: var(--cv-date-color);
+  white-space: nowrap;
   margin-left: 1rem;
+  align-self: flex-start;
 }
 
 .job-description {
@@ -734,6 +806,32 @@ function addEducationItem(
   }
 }
 
+/* Estilos para impresión de certificaciones */
+@media print {
+  .certification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .certification-item > div:first-child {
+    flex: 1;
+  }
+  
+  .certification-date {
+    white-space: nowrap;
+    margin-left: 1rem;
+    align-self: flex-start;
+  }
+  
+  .certification-url {
+    display: block;
+    margin-top: 0.25rem;
+  }
+}
+
 /* Educación */
 .education-item {
   margin-bottom: 1rem;
@@ -744,22 +842,30 @@ function addEducationItem(
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 0.25rem;
+  width: 100%;
+}
+
+.education-header > div {
+  flex: 1;
 }
 
 .education-degree {
   font-weight: 600;
   color: var(--cv-text-color);
+  margin: 0;
 }
 
 .education-institution {
   color: var(--cv-text-color);
+  margin: 0;
+  margin-top: 0.1rem;
 }
 
 .education-year {
   color: var(--cv-date-color);
-  background-color: var(--cv-skills-bg);
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.25rem;
+  white-space: nowrap;
+  margin-left: 1rem;
+  align-self: flex-start;
 }
 
 .education-description {
@@ -775,13 +881,13 @@ function addEducationItem(
 }
 
 .skill-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .skill-category {
   font-weight: 600;
   color: var(--cv-text-color);
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.5rem 0;
 }
 
 .skill-subcategories {
@@ -814,19 +920,39 @@ function addEducationItem(
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  width: 100%;
+}
+
+.certification-item > div:first-child {
+  flex: 1;
 }
 
 .certification-name {
   font-weight: 600;
   color: var(--cv-text-color);
+  margin: 0;
 }
 
 .certification-issuer {
   color: var(--cv-text-color);
+  margin: 4px 0;
 }
 
 .certification-date {
   color: var(--cv-date-color);
+  white-space: nowrap;
+  margin-left: 1rem;
+  align-self: flex-start;
+}
+
+.certification-url a{
+  font-size: 10px;
+  color: var(--cv-name-color);
+  text-decoration: none;
+}
+
+.certification-url a:hover {
+  text-decoration: underline;
 }
 
 /* Responsive design */
