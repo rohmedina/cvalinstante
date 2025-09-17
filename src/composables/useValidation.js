@@ -9,48 +9,48 @@ export function useValidation() {
   const validationRules = {
     text: {
       required: (value) => ({
-        isValid: value && value.trim().length > 0,
+        isValid: value && typeof value === 'string' && value.trim().length > 0,
         message: 'Este campo es requerido'
       }),
       minLength: (value, min = 2) => ({
-        isValid: !value || value.length >= min,
+        isValid: !value || (typeof value === 'string' && value.length >= min),
         message: `Debe tener al menos ${min} caracteres`
       }),
       maxLength: (value, max = 100) => ({
-        isValid: !value || value.length <= max,
+        isValid: !value || (typeof value === 'string' && value.length <= max),
         message: `No debe exceder ${max} caracteres`
       })
     },
 
     email: {
       required: (value) => ({
-        isValid: value && value.trim().length > 0,
+        isValid: value && typeof value === 'string' && value.trim().length > 0,
         message: 'El email es requerido'
       }),
       format: (value) => ({
-        isValid: !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        isValid: !value || (typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)),
         message: 'Formato de email inválido'
       })
     },
 
     tel: {
       required: (value) => ({
-        isValid: value && value.trim().length > 0,
+        isValid: value && typeof value === 'string' && value.trim().length > 0,
         message: 'El teléfono es requerido'
       }),
       format: (value) => ({
-        isValid: !value || /^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/[\s\-\(\)]/g, '')),
+        isValid: !value || (typeof value === 'string' && /^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/[\s\-\(\)]/g, ''))),
         message: 'Formato de teléfono inválido'
       })
     },
 
     textarea: {
       required: (value) => ({
-        isValid: value && value.trim().length > 0,
+        isValid: value && typeof value === 'string' && value.trim().length > 0,
         message: 'Este campo es requerido'
       }),
       minLength: (value, min = 10) => ({
-        isValid: !value || value.length >= min,
+        isValid: !value || (typeof value === 'string' && value.length >= min),
         message: `Debe tener al menos ${min} caracteres`
       }),
       maxLength: (value, max = 500) => ({

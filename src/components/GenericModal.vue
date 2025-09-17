@@ -1,7 +1,7 @@
 <template>
   <div class="modal-overlay" style="background-color: rgba(0, 0, 0, 0.6);">
     <div class="modal-container" :class="modalSize" style="background-color: var(--color-surface);">
-      <h2 class="modal-title" style="font-size: var(--modal-title-size); color: var(--text-primary);">{{ config.title }}</h2>
+      <h2 class="modal-title" style="font-size: var(--modal-title-size);">{{ config.title }}</h2>
       <form @submit.prevent="guardar">
         
         <!-- Formulario simple (campos únicos) -->
@@ -18,7 +18,6 @@
               v-model="draft[field.key]"
               :type="getInputType(field.type)"
               :placeholder="field.placeholder"
-              :required="field.required"
               class="input"
               :class="{ 'error': showErrors && errors[field.key] }"
               @input="handleFieldValidation(field, draft[field.key])"
@@ -34,7 +33,6 @@
               v-model="draft[field.key]"
               :rows="field.rows || 3"
               :placeholder="field.placeholder"
-              :required="field.required"
               class="input"
               :class="{ 'error': showErrors && errors[field.key] }"
               @input="handleFieldValidation(field, draft[field.key])"
@@ -302,6 +300,8 @@ const fieldTouched = reactive({})
 
 const draft = ref(props.config?.type === 'list' ? [] : {})
 const tagInput = ref('')
+// Almacenar datos iniciales para comparación
+const initialData = ref(null)
 
 const modalSize = computed(() => {
   switch (props.config.size) {
@@ -317,13 +317,19 @@ const areRequiredFieldsComplete = computed(() => {
   if (!props.config?.fields) return true
   
   if (props.config.type === 'simple') {
-    return props.config.fields.every(field => {
-      if (!field.required) return true
+    // Para modales simples, verificar solo los campos requeridos
+    const requiredFields = props.config.fields.filter(field => field.required)
+    if (requiredFields.length === 0) return true // Si no hay campos requeridos, siempre permitir guardar
+    
+    return requiredFields.every(field => {
       const value = draft.value[field.key]
       return value && value.toString().trim() !== ''
     })
   } else if (props.config.type === 'list') {
-    if (!draft.value || draft.value.length === 0) return false
+    // Permitir guardar listas vacías (cuando se eliminan todos los elementos)
+    if (!draft.value || draft.value.length === 0) return true
+    
+    // Si hay elementos, validar que todos los campos requeridos estén completos
     return draft.value.every(item => {
       return props.config.fields.every(field => {
         if (!field.required) return true
@@ -343,11 +349,19 @@ onMounted(() => {
 function initializeDraft() {
   if (props.config.type === 'simple') {
     draft.value = props.initialData ? { ...props.initialData } : {}
+    // Almacenar datos iniciales para comparación
+    initialData.value = props.initialData ? JSON.parse(JSON.stringify(props.initialData)) : {}
+    
     // Inicializar campos vacíos
     if (props.config.fields && Array.isArray(props.config.fields)) {
       props.config.fields.forEach(field => {
         if (field && field.key && !(field.key in draft.value)) {
           draft.value[field.key] = ''
+        } else if (field && field.key && draft.value[field.key] != null) {
+          // Asegurar que el valor sea string para campos de texto
+          if (['text', 'email', 'tel', 'textarea'].includes(field.type)) {
+            draft.value[field.key] = String(draft.value[field.key] || '')
+          }
         }
       })
     }
@@ -373,8 +387,12 @@ function initializeDraft() {
         })
         return newItem
       })
+      // Almacenar datos iniciales para comparación
+      initialData.value = JSON.parse(JSON.stringify(draft.value))
     } else {
       draft.value = []
+      // Almacenar datos iniciales vacíos para comparación
+      initialData.value = []
     }
   } else if (props.config.type === 'tags') {
     draft.value = props.initialData ? [...props.initialData] : []
@@ -431,14 +449,19 @@ function guardar() {
   // Limpiar errores previos
   clearErrors()
   
-  // Validar todos los campos antes de guardar (solo para formularios con campos)
+  // Validar solo los campos requeridos antes de guardar
   if (props.config.fields && props.config.fields.length > 0) {
-    const isFormValid = validateFields(props.config.fields, draft.value)
+    // Filtrar solo los campos requeridos para validación
+    const requiredFields = props.config.fields.filter(field => field.required)
     
-    if (!isFormValid || hasErrors()) {
-      showErrors.value = true
-      // Si hay errores, no proceder con el guardado
-      return
+    if (requiredFields.length > 0) {
+      const isFormValid = validateFields(requiredFields, draft.value)
+      
+      if (!isFormValid || hasErrors()) {
+        showErrors.value = true
+        // Si hay errores, no proceder con el guardado
+        return
+      }
     }
   }
   
@@ -450,7 +473,12 @@ function guardar() {
     dataToSave = [...draft.value, ...additionalTags]
   }
   
-  emit('save', dataToSave)
+  // Emitir datos con información adicional para determinar el tipo de acción
+  emit('save', {
+    data: dataToSave,
+    initialData: initialData.value,
+    modalType: props.config.type
+  })
   emit('close')
 }
 
@@ -548,15 +576,24 @@ function getInputType(fieldType) {
 
 // Función para validar cuando el usuario escribe
 function handleFieldValidation(field, value) {
-  validateField(field.type, value, field.key, field.validationRules)
+  // Solo validar si el campo es requerido
+  if (field.required) {
+    validateField(field.type, value, field.key, field.validationRules)
+  } else {
+    // Si no es requerido, limpiar cualquier error existente
+    clearFieldError(field.key)
+  }
 }
 
 // Función para marcar campo como "tocado" cuando pierde el foco
 function handleFieldBlur(field, value) {
   fieldTouched[field.key] = true
-  validateField(field.type, value, field.key, field.validationRules)
-  // Mostrar errores después de que el usuario haya interactuado con el campo
-  showErrors.value = true
+  // Solo validar si el campo es requerido
+  if (field.required) {
+    validateField(field.type, value, field.key, field.validationRules)
+    // Mostrar errores después de que el usuario haya interactuado con el campo
+    showErrors.value = true
+  }
 }
 </script>
 
@@ -577,14 +614,32 @@ function handleFieldBlur(field, value) {
 
 /* Modal container */
 .modal-container {
-  border-radius: 0.5rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 10px 20px -5px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   width: 100%;
   padding: 1rem;
   max-height: 90vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (min-width: 640px) {
@@ -777,78 +832,119 @@ function handleFieldBlur(field, value) {
 .input {
   width: 100%;
   max-width: 100%;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--color-gray-400);
+  border-radius: 12px;
+  padding: 16px 20px;
+  border: 2px solid var(--color-gray-300);
   background-color: var(--bg-surface);
   color: var(--text-primary);
   font-size: var(--font-size-base);
-  transition: all 0.2s;
+  font-family: var(--font-family-body);
+  transition: all 0.3s ease;
   resize: vertical;
-  min-height: 2.5rem;
+  min-height: 3rem;
   max-height: 12rem;
-  font-family: inherit;
   line-height: 1.5;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-200), 0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: var(--color-primary);
+  transform: translateY(-1px);
 }
 
 .input::placeholder {
-  color: var(--text-secondary);
-  opacity: 0.7;
+  color: var(--color-gray-500);
+  opacity: 0.8;
 }
 
 .input-small {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  border-radius: 0.25rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-gray-400);
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 2px solid var(--color-gray-300);
   background-color: var(--bg-surface);
   color: var(--text-primary);
   font-size: var(--font-size-sm);
-  transition: all 0.2s;
+  font-family: var(--font-family-body);
+  transition: all 0.3s ease;
   resize: vertical;
-  min-height: 2rem;
+  min-height: 2.5rem;
   max-height: 8rem;
-  font-family: inherit;
   line-height: 1.4;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .input-small:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-200), 0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: var(--color-primary);
+  transform: translateY(-1px);
 }
 
 .input-small::placeholder {
-  color: var(--text-secondary);
-  opacity: 0.7;
+  color: var(--color-gray-500);
+  opacity: 0.8;
 }
 
 /* Button styles */
 .btn {
   padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
+  border-radius: 12px;
+  font-weight: 600;
   font-size: var(--font-size-base);
+  font-family: var(--font-family-body);
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .btn:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  box-shadow: 
+    0 0 0 3px rgba(59, 130, 246, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn-cancel {
@@ -866,16 +962,22 @@ function handleFieldBlur(field, value) {
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
+  background: var(--color-primary);
   color: var(--text-button-primary);
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-hover);
+  background: var(--color-primary-hover);
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.18),
+    0 3px 6px rgba(0, 0, 0, 0.12);
 }
 
 .btn-primary:active {
-  background-color: var(--color-primary-active);
+  background: var(--color-primary-active);
 }
 
 .btn-secondary {
