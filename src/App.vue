@@ -1,15 +1,15 @@
 <template>
   <div class="app-container" style="background-color: var(--color-background);">
     <!-- Panel izquierdo para edición -->
-    <div class="sidebar-panel" style="background-color: var(--color-surface); color: var(--text-primary);">
+    <aside class="sidebar-panel" role="complementary" aria-label="Panel de edición de CV" style="background-color: var(--color-surface); color: var(--text-primary);">
       <!-- Header -->
-      <div class="sidebar-header" style="border-color: var(--color-gray-400);">
+      <header class="sidebar-header" role="banner" style="border-color: var(--color-gray-400);">
         <h1 class="app-title" style="font-size: var(--modal-title-size); color: var(--color-primary);">CvAlInstante</h1>
         <p class="app-subtitle" style="font-size: var(--font-size-sm); color: var(--text-secondary);">Completa cada sección para crear tu currículum profesional</p>
-      </div>
+      </header>
       
-      <!-- Botones de navegación -->
-      <div class="sidebar-content">
+      <!-- Navegación de secciones -->
+      <nav class="sidebar-content" role="navigation" aria-label="Secciones del currículum">
         <Button variant="sidebar" @click="openPersonal()" icon="👤" text="Información Personal" :completed="hasPersonalInfo">
           <div class="status-indicator" :class="{ 'filled': hasPersonalInfo }">
             <svg v-if="hasPersonalInfo" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -59,15 +59,15 @@
             </svg>
           </div>
         </Button>
-      </div>
+      </nav>
       
       <!-- Botones de acción -->
-      <div class="sidebar-footer" style="border-color: var(--color-gray-400);">
-        <Button variant="action" @click="exportPdf" icon="📄" text="Exportar a PDF" />
-        <Button variant="secondary" @click="clearCV" icon="🗑️" text="Limpiar CV" full-width />
+      <footer class="sidebar-footer" style="border-color: var(--color-gray-400);">
+        <Button variant="action" @click="exportPdf" icon="📄" text="Exportar a PDF" aria-label="Exportar currículum a PDF" />
+        <Button variant="secondary" @click="clearCV" icon="🗑️" text="Limpiar CV" full-width aria-label="Limpiar todo el contenido del currículum" />
         
         <!-- Botón de donaciones -->
-        <div class="donation-section" style="border-color: var(--color-gray-400);">
+        <section class="donation-section" aria-label="Sección de donaciones" style="border-color: var(--color-gray-400);">
           <div class="donation-content">
             <p class="donation-text" style="color: var(--text-secondary);">¿Te gusta esta herramienta?</p>
             <div class="donation-button-container">
@@ -80,14 +80,14 @@
               </a>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
+      </footer>
+    </aside>
 
     <!-- Panel derecho para vista previa -->
-    <div class="preview-panel">
+    <main class="preview-panel" role="main" aria-label="Vista previa del currículum">
       <CvPreview />
-    </div>
+    </main>
 
     <!-- Modal genérico -->
     <GenericModal 

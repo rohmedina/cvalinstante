@@ -4,9 +4,12 @@
     :style="buttonStyles"
     @click="$emit('click', $event)"
     :disabled="disabled"
+    :aria-label="ariaLabel || text"
+    :type="type"
+    :role="role"
   >
     <div class="button-content">
-      <span v-if="icon" class="icon" :class="{ 'icon-with-text': text }">
+      <span v-if="icon" class="icon" :class="{ 'icon-with-text': text }" aria-hidden="true">
         {{ icon }}
       </span>
       <span v-if="text" class="button-text">
@@ -48,6 +51,19 @@ const props = defineProps({
   fullWidth: {
     type: Boolean,
     default: false
+  },
+  ariaLabel: {
+    type: String,
+    default: ''
+  },
+  type: {
+    type: String,
+    default: 'button',
+    validator: (value) => ['button', 'submit', 'reset'].includes(value)
+  },
+  role: {
+    type: String,
+    default: 'button'
   },
   customColor: {
     type: String,
