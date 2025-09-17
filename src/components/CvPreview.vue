@@ -139,7 +139,7 @@
     </div>
 
     <!-- Información Adicional -->
-    <div v-if="additionalInfo" class="section">
+    <div v-if="additionalInfo && typeof additionalInfo === 'string' && additionalInfo.trim()" class="section">
       <h2 class="section-title" style="font-size: var(--cv-section-title-size);">
         INFORMACIÓN ADICIONAL
       </h2>
@@ -655,12 +655,39 @@ function addEducationItem(
 <style scoped>
 /* Contenedor principal del CV */
 .cv-container {
-  background-color: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border-radius: 0.5rem;
+  background: var(--cv-bg);
+  color: var(--cv-text-color);
   padding: 2rem;
-  max-width: 56rem;
-  margin: 0 auto;
+  margin: 1rem;
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--color-gray-200);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cv-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--color-primary-400);
+  border-radius: 16px 16px 0 0;
+}
+
+.cv-container:hover {
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
 }
 
 /* Estilos para impresión */

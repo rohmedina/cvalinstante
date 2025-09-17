@@ -56,6 +56,33 @@ export const useCvStore = defineStore('cv', () => {
         }
     }
     
+    // Función para limpiar localStorage
+    function clearLocalStorage() {
+        localStorage.removeItem(STORAGE_KEY)
+    }
+    
+    // Función para resetear todos los datos
+    function resetAllData() {
+        cvData.personalInfo = {
+            name: '',
+            phone: '',
+            email: '',
+            address: '',
+            linkedin: '',
+            website: '',
+            github: '',
+        }
+        cvData.professionalSummary = ''
+        cvData.workExperience = []
+        cvData.education = []
+        cvData.technicalSkills = []
+        cvData.languages = []
+        cvData.certifications = []
+        cvData.additionalInfo = ''
+        
+        // También limpiar localStorage
+        clearLocalStorage()
+    }
     // Cargar datos iniciales desde localStorage
     const savedData = loadFromLocalStorage()
     
@@ -127,7 +154,8 @@ export const useCvStore = defineStore('cv', () => {
     }
 
     function setAdditionalInfo(info) {
-        cvData.additionalInfo = info
+        // Asegurar que siempre sea un string
+        cvData.additionalInfo = typeof info === 'string' ? info : (info || '')
     }
 
     // Método genérico para actualizar cualquier sección
@@ -191,6 +219,8 @@ export const useCvStore = defineStore('cv', () => {
         updateSection,
         saveToLocalStorage,
         loadFromLocalStorage,
-        clearExpiredData
+        clearExpiredData,
+        clearLocalStorage,
+        resetAllData
     }
 })

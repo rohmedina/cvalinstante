@@ -187,34 +187,43 @@ const buttonStyles = computed(() => {
   text-align: left;
   justify-content: flex-start;
   background-color: transparent;
-  color: var(--text-secondary);
-  padding: 12px 16px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  border: 1px solid var(--color-slate-500);
+  color: var(--sidebar-text-secondary);
+  padding: 16px 20px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--color-gray-600);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-sidebar:focus {
-  box-shadow: 0 0 0 2px var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-400);
+  outline: none;
 }
 
 .btn-action {
   width: 100%;
   background-color: var(--color-primary);
   color: var(--text-button-primary);
-  padding: 12px 16px;
+  padding: 16px 20px;
   font-size: var(--font-size-base);
+  font-weight: 600;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+  transition: all 0.3s ease;
 }
 
 .btn-action:hover:not(.btn-disabled) {
   background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4);
 }
 
 .btn-action:focus {
-  box-shadow: 0 0 0 2px var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-200);
+  outline: none;
 }
 
 .btn-danger {
@@ -270,29 +279,31 @@ const buttonStyles = computed(() => {
 
 /* Hover effects para sidebar */
 .btn-sidebar:hover {
-  background-color: var(--color-surface);
-  color: var(--text-primary);
-  transform: translateX(2px);
-  transition: all 0.2s ease-in-out;
+  background-color: var(--color-gray-600);
+  color: var(--sidebar-text);
+  transform: translateX(4px);
+  border-color: var(--color-primary-400);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn-sidebar:hover .icon {
-  color: var(--color-primary);
-  transition: color 0.2s ease-in-out;
+  color: var(--color-primary-400);
+  transform: scale(1.1);
 }
 
 .btn-sidebar:hover .button-text {
-  color: var(--text-primary);
+  color: var(--sidebar-text);
   font-weight: 500;
-  transition: all 0.2s ease-in-out;
 }
 
 /* Estado completado para sidebar */
 .btn-sidebar-completed {
-  border-color: var(--color-teal-300);
+  border-color: var(--color-primary-400);
+  background-color: rgba(20, 184, 166, 0.1);
 }
 
 .btn-sidebar-completed:hover {
-  background-color: rgba(48, 247, 221, 0.2);
+  background-color: rgba(20, 184, 166, 0.2);
+  border-color: var(--color-primary-300);
 }
 </style>

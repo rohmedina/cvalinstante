@@ -1,58 +1,58 @@
 <template>
   <div class="app-container" style="background-color: var(--color-background);">
     <!-- Panel izquierdo para edición -->
-    <aside class="sidebar-panel" role="complementary" aria-label="Panel de edición de CV" style="background-color: var(--color-surface); color: var(--text-primary);">
+    <aside class="sidebar-panel" role="complementary" aria-label="Panel de edición de CV" style="background-color: var(--sidebar-bg); color: var(--sidebar-text);">
       <!-- Header -->
-      <header class="sidebar-header" role="banner" style="border-color: var(--color-gray-400);">
-        <h1 class="app-title" style="font-size: var(--modal-title-size); color: var(--color-primary);">CvAlInstante</h1>
-        <p class="app-subtitle" style="font-size: var(--font-size-sm); color: var(--text-secondary);">Completa cada sección para crear tu currículum profesional</p>
+      <header class="sidebar-header" role="banner" style="border-color: var(--color-gray-600);">
+        <h1 class="app-title" style="font-size: var(--modal-title-size); color: var(--color-primary-400); font-family: var(--font-family-headings);">CvAlInstante</h1>
+        <p class="app-subtitle" style="font-size: var(--font-size-sm); color: var(--sidebar-text-secondary);">Completa cada sección para crear tu currículum profesional</p>
       </header>
       
       <!-- Navegación de secciones -->
       <nav class="sidebar-content" role="navigation" aria-label="Secciones del currículum">
-        <Button variant="sidebar" @click="openPersonal()" icon="👤" text="Información Personal" :completed="hasPersonalInfo">
+        <Button variant="sidebar" @click="openPersonal()" icon="👤" text="Información Personal" :completed="hasPersonalInfo" title="Añade tu nombre, contacto y datos básicos">
           <div class="status-indicator" :class="{ 'filled': hasPersonalInfo }">
             <svg v-if="hasPersonalInfo" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </div>
         </Button>
-        <Button variant="sidebar" @click="openSummary()" icon="📝" text="Resumen Profesional" :completed="hasProfessionalSummary">
+        <Button variant="sidebar" @click="openSummary()" icon="📝" text="Resumen Profesional" :completed="hasProfessionalSummary" title="Escribe un resumen de tu perfil profesional">
           <div class="status-indicator" :class="{ 'filled': hasProfessionalSummary }">
             <svg v-if="hasProfessionalSummary" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </div>
         </Button>
-        <Button variant="sidebar" @click="openWork()" icon="💼" text="Experiencia Laboral" :completed="hasWorkExperience">
+        <Button variant="sidebar" @click="openWork()" icon="💼" text="Experiencia Laboral" :completed="hasWorkExperience" title="Describe tu historial profesional y logros">
           <div class="status-indicator" :class="{ 'filled': hasWorkExperience }">
             <svg v-if="hasWorkExperience" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </div>
         </Button>
-        <Button variant="sidebar" @click="openEducation()" icon="🎓" text="Educación" :completed="hasEducation">
+        <Button variant="sidebar" @click="openEducation()" icon="🎓" text="Educación" :completed="hasEducation" title="Incluye tu formación académica y títulos">
           <div class="status-indicator" :class="{ 'filled': hasEducation }">
             <svg v-if="hasEducation" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </div>
         </Button>
-        <Button variant="sidebar" @click="openSkills()" icon="⚡" text="Habilidades Técnicas" :completed="hasSkills">
+        <Button variant="sidebar" @click="openSkills()" icon="⚡" text="Habilidades Técnicas" :completed="hasSkills" title="Lista tus competencias y tecnologías">
           <div class="status-indicator" :class="{ 'filled': hasSkills }">
             <svg v-if="hasSkills" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </div>
         </Button>
-        <Button variant="sidebar" @click="openCerts()" icon="🏆" text="Certificaciones" :completed="hasCertifications">
+        <Button variant="sidebar" @click="openCerts()" icon="🏆" text="Certificaciones" :completed="hasCertifications" title="Agrega certificados y reconocimientos">
           <div class="status-indicator" :class="{ 'filled': hasCertifications }">
             <svg v-if="hasCertifications" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
           </div>
         </Button>
-        <Button variant="sidebar" @click="openAdditional()" icon="📋" text="Información Adicional" :completed="hasAdditionalInfo">
+        <Button variant="sidebar" @click="openAdditional()" icon="📋" text="Información Adicional" :completed="hasAdditionalInfo" title="Incluye idiomas, proyectos y otros datos relevantes">
           <div class="status-indicator" :class="{ 'filled': hasAdditionalInfo }">
             <svg v-if="hasAdditionalInfo" class="check-icon" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -62,16 +62,16 @@
       </nav>
       
       <!-- Botones de acción -->
-      <footer class="sidebar-footer" style="border-color: var(--color-gray-400);">
-        <Button variant="action" @click="exportPdf" icon="📄" text="Exportar a PDF" aria-label="Exportar currículum a PDF" />
-        <Button variant="secondary" @click="clearCV" icon="🗑️" text="Limpiar CV" full-width aria-label="Limpiar todo el contenido del currículum" />
+      <footer class="sidebar-footer" style="border-color: var(--color-gray-600);">
+        <Button variant="action" @click="exportPdf" icon="📄" text="Exportar a PDF" aria-label="Exportar currículum a PDF" title="Descarga tu CV en formato PDF listo para imprimir" />
+        <Button variant="secondary" @click="clearCV" icon="🗑️" text="Limpiar CV" full-width aria-label="Limpiar todo el contenido del currículum" title="Elimina toda la información del CV para empezar de nuevo" />
         
         <!-- Botón de donaciones -->
-        <section class="donation-section" aria-label="Sección de donaciones" style="border-color: var(--color-gray-400);">
+        <section class="donation-section" aria-label="Sección de donaciones" style="border-color: var(--color-gray-600);">
           <div class="donation-content">
-            <p class="donation-text" style="color: var(--text-secondary);">¿Te gusta esta herramienta?</p>
+            <p class="donation-text" style="color: var(--sidebar-text-secondary);">¿Te gusta esta herramienta?</p>
             <div class="donation-button-container">
-              <a href="https://www.buymeacoffee.com/R0Medina" target="_blank">
+              <a href="https://www.buymeacoffee.com/R0Medina" target="_blank" title="Apoya el desarrollo de esta herramienta con una donación">
                 <img 
                   src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" 
                   alt="Buy Me A Coffee" 
@@ -122,6 +122,7 @@ import Button from './components/Button.vue'
 import Toast from './components/Toast.vue'
 import ConfirmDialog from './components/ConfirmDialog.vue'
 import { getModalConfig, createEmptyData } from './utils/modalConfigs.js'
+import * as toastMessages from './utils/toastMessages.js'
 
 const cvStore = useCvStore()
 const toast = inject('toast')
@@ -161,7 +162,12 @@ const openModal = (type) => {
     existingData = existingData ? { summary: existingData } : { summary: '' }
   } else if (type === 'additionalInfo') {
     // El store guarda additionalInfo como string, pero el modal espera un objeto con 'info'
-    existingData = existingData ? { info: existingData } : { info: '' }
+    // Si existingData es un objeto, extraer el valor correcto
+    if (typeof existingData === 'object' && existingData !== null) {
+      existingData = { info: existingData.info || existingData.additionalInfo || '' }
+    } else {
+      existingData = existingData ? { info: String(existingData) } : { info: '' }
+    }
   } else if (!existingData) {
     existingData = createEmptyData(config)
   }
@@ -177,25 +183,28 @@ const closeModal = () => {
 }
 
 // Función para guardar datos del modal
-const saveModalData = (data) => {
+const saveModalData = (saveData) => {
   if (currentModal.value) {
-    const isEditing = currentModalData.value && Object.keys(currentModalData.value).length > 0
+    // Extraer datos del objeto enviado por el modal
+    const { data, initialData, modalType } = saveData
+    
+    // Determinar el tipo de acción usando la utilidad
+    const actionType = toastMessages.determineActionType(initialData, data, modalType)
+    
+    // Actualizar el store
     cvStore.updateSection(currentModal.value, data)
     
-    // Mostrar toast de confirmación
-    const sectionNames = {
-      personalInfo: 'Información Personal',
-      professionalSummary: 'Resumen Profesional',
-      workExperience: 'Experiencia Laboral',
-      education: 'Educación',
-      skills: 'Habilidades Técnicas',
-      certifications: 'Certificaciones',
-      additionalInfo: 'Información Adicional'
-    }
+    // Obtener el mensaje contextual apropiado
+    const message = toastMessages.getToastMessage(currentModal.value, actionType)
     
-    const sectionName = sectionNames[currentModal.value] || 'Sección'
-    const action = isEditing ? 'actualizada' : 'creada'
-    toast.success(`${sectionName} ${action} exitosamente`)
+    // Mostrar toast con el mensaje apropiado
+    if (message.type === 'success') {
+      toast.success(message.message)
+    } else if (message.type === 'info') {
+      toast.info(message.message)
+    } else if (message.type === 'warning') {
+      toast.warning(message.message)
+    }
     
     closeModal()
   }
@@ -211,55 +220,75 @@ const deleteModalData = (index) => {
     cvStore.updateSection(currentModal.value, currentData)
     currentModalData.value = currentData
     
-    // Mostrar toast de confirmación
-    const sectionNames = {
-      workExperience: 'Experiencia Laboral',
-      education: 'Educación',
-      skills: 'Habilidad Técnica',
-      languages: 'Idioma',
-      certifications: 'Certificación'
-    }
+    // Obtener el mensaje contextual apropiado para eliminación
+    const message = toastMessages.getToastMessage(currentModal.value, toastMessages.ACTION_TYPES.DELETE)
     
-    const sectionName = sectionNames[currentModal.value] || 'Elemento'
-    toast.success(`${sectionName} eliminada exitosamente`)
+    // Mostrar toast con el mensaje apropiado
+    if (message.type === 'success') {
+      toast.success(message.message)
+    } else if (message.type === 'info') {
+      toast.info(message.message)
+    } else if (message.type === 'warning') {
+      toast.warning(message.message)
+    }
   }
 }
 
 // Computed properties para verificar si cada sección tiene información
 const hasPersonalInfo = computed(() => {
   const info = cvStore.cvData.personalInfo
-  return info.name || info.phone || info.email || info.address || info.linkedin || info.website
+  return !!(info.name?.trim() || info.phone?.trim() || info.email?.trim() || info.address?.trim() || info.linkedin?.trim() || info.website?.trim() || info.github?.trim())
 })
 
 const hasProfessionalSummary = computed(() => {
-  return cvStore.cvData.professionalSummary && cvStore.cvData.professionalSummary.trim().length > 0
+  return !!(cvStore.cvData.professionalSummary?.trim())
 })
 
 const hasWorkExperience = computed(() => {
-  return cvStore.cvData.workExperience && cvStore.cvData.workExperience.length > 0
+  return !!(cvStore.cvData.workExperience?.length > 0)
 })
 
 const hasEducation = computed(() => {
-  return cvStore.cvData.education && cvStore.cvData.education.length > 0
+  return !!(cvStore.cvData.education?.length > 0)
 })
 
 const hasSkills = computed(() => {
-  return cvStore.cvData.technicalSkills && cvStore.cvData.technicalSkills.length > 0
+  return !!(cvStore.cvData.technicalSkills?.length > 0)
 })
 
 const hasCertifications = computed(() => {
-  return cvStore.cvData.certifications && cvStore.cvData.certifications.length > 0
+  return !!(cvStore.cvData.certifications?.length > 0)
 })
 
 const hasAdditionalInfo = computed(() => {
-  return cvStore.cvData.additionalInfo && cvStore.cvData.additionalInfo.trim().length > 0
+  const info = cvStore.cvData.additionalInfo
+  return !!(typeof info === 'string' && info.trim())
 })
 
 // Función para exportar PDF (se delegará al componente CvPreview)
 const exportPdf = () => {
-  // Esta función será manejada por el componente CvPreview
-  const event = new CustomEvent('export-pdf')
-  window.dispatchEvent(event)
+  // Validar que existan los campos mínimos requeridos
+  if (!hasPersonalInfo.value || !hasProfessionalSummary.value) {
+    // Mostrar toast de advertencia
+    const toastMessage = toastMessages.getToastMessage('pdfExport', toastMessages.ACTION_TYPES.EXPORT_VALIDATION_ERROR)
+    toast.warning(toastMessage.message)
+    return
+  }
+
+  try {
+    // Esta función será manejada por el componente CvPreview
+    const event = new CustomEvent('export-pdf')
+    window.dispatchEvent(event)
+    
+    // Mostrar toast de éxito
+    const successMessage = toastMessages.getToastMessage('pdfExport', toastMessages.ACTION_TYPES.EXPORT_SUCCESS)
+    toast.success(successMessage.message)
+  } catch (error) {
+    // Mostrar toast de error
+    const errorMessage = toastMessages.getToastMessage('pdfExport', toastMessages.ACTION_TYPES.EXPORT_ERROR)
+    toast.error(errorMessage.message)
+    console.error('Error al exportar PDF:', error)
+  }
 }
 
 // Función para limpiar el CV
@@ -267,23 +296,8 @@ const clearCV = async () => {
   const confirmed = await confirmDialog.value.show()
   
   if (confirmed) {
-    // Resetear todos los datos del CV
-    cvStore.cvData.personalInfo = {
-      name: '',
-      phone: '',
-      email: '',
-      address: '',
-      linkedin: '',
-      website: '',
-      github: '',
-    }
-    cvStore.cvData.professionalSummary = ''
-    cvStore.cvData.workExperience = []
-    cvStore.cvData.education = []
-    cvStore.cvData.technicalSkills = []
-    cvStore.cvData.languages = []
-    cvStore.cvData.certifications = []
-    cvStore.cvData.additionalInfo = ''
+    // Usar la nueva función del store para resetear completamente
+    cvStore.resetAllData()
     
     // Mostrar toast de confirmación
     toast.success('CV limpiado exitosamente')
@@ -363,32 +377,34 @@ const updateTheme = () => {
 /* Contenido del sidebar */
 .sidebar-content {
   flex: 1;
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 @media (min-width: 1024px) {
   .sidebar-content {
     overflow-y: auto;
+    padding: 2rem;
+    gap: 1.25rem;
   }
 }
 
 /* Footer del sidebar */
 .sidebar-footer {
-  padding: 1rem;
+  padding: 1.5rem;
   border-top: 1px solid;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-shrink: 0;
 }
 
 /* Sección de donaciones */
 .donation-section {
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
   border-top: 1px solid;
 }
 
@@ -397,8 +413,9 @@ const updateTheme = () => {
 }
 
 .donation-text {
-  font-size: 0.75rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
 }
 
 .donation-button-container {
@@ -409,13 +426,14 @@ const updateTheme = () => {
 /* Panel de vista previa */
 .preview-panel {
   flex: 1;
-  padding: 1rem;
+  padding: 1.5rem;
   min-height: 100vh;
+  background: var(--bg-primary);
 }
 
 @media (min-width: 1024px) {
   .preview-panel {
-    padding: 2rem;
+    padding: 3rem 2rem;
   }
 }
 
