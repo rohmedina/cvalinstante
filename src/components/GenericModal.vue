@@ -1057,14 +1057,13 @@ function handleFieldBlur(field, value) {
 
 /* Estilos para botones deshabilitados */
 .btn-disabled {
-  background-color: var(--color-gray-300) !important;
-  color: var(--text-secondary) !important;
-  cursor: not-allowed !important;
-  opacity: 0.6 !important;
+  background-color: var(--color-gray-300);
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .btn-disabled:hover {
-  background-color: var(--color-gray-300) !important;
-  opacity: 0.6 !important;
+  background-color: var(--color-gray-300);
+  opacity: 0.6;
 }
 </style>
